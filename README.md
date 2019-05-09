@@ -2,7 +2,9 @@
 Using OpenCV and Python 3 with a Raspberry Pi to create a robot that finds a yellow ball and puts it on a green platform. 
 
 Check out the videos here: 
+
 https://youtu.be/N7MrAUGBYeU
+
 https://youtu.be/aqBdQbYp4Sk
 
 The idea was that the robot would pick up the yellow ball and put it on the green can, but the ball would always fall off and the cycle would continue. 
