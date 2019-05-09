@@ -26,7 +26,7 @@ GPIO.setup(pinA1, GPIO.OUT)
 GPIO.setup(pinA2, GPIO.OUT)
 GPIO.setup(pinAE, GPIO.OUT)
 
-'''Set up pins for Motor 2'''
+'''Set up pins for Motor 2 --- all continuous servo motors'''
 pinB1 = 6     # IN3, motor 2
 pinB2 = 12    # IN4, motor 2
 pinBE = 5    # E2, motor 2
@@ -35,14 +35,14 @@ GPIO.setup(pinB1, GPIO.OUT)
 GPIO.setup(pinB2, GPIO.OUT)
 GPIO.setup(pinBE, GPIO.OUT)
 
-'''Set up pins for top and bottom button'''
-pinTOP = 27         #grey wire - top
+'''Set up pins for top and bottom button --- these are snap action switches at the top and bottom of the forklift'''
+pinTOP = 27         #grey wire - top      
 pinBOT = 22         #white wire - bottom
 
 GPIO.setup(pinTOP, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(pinBOT, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-'''servo set up'''
+'''servo set up  --- using Adafruit servo hat'''
 pwm = PWM(0x40)
 servoMin = 150  # Min pulse length out of 4096
 servoMax = 600  # Max pulse length out of 4096
@@ -144,7 +144,7 @@ def shutoff():
     rolling_stop(2)
     print("motors are off")
 
-'''ultrasonic range finder'''
+'''ultrasonic range finder ---- for proximity detection'''
 GPIO_TRIGGER = 13
 GPIO_ECHO = 16
 
@@ -184,8 +184,8 @@ def find_yellow_ball():
         hsv = cv2.cvtColor(blur, cv2.COLOR_BGR2HSV)
         #lower_yellow = np.array([15, 200, 40])
         #upper_yellow = np.array([40, 255, 255])
-        lower_yellow = np.array([10, 220, 100])
-        upper_yellow = np.array([50, 255, 255])
+        lower_yellow = np.array([10, 220, 100])    #Change based off your sepecific color of yellow
+        upper_yellow = np.array([50, 255, 255])    #Adding lights next to the camera keeps these values more consistent 
         mask = cv2.inRange(hsv, lower_yellow, upper_yellow)
         #mask = cv2.erode(mask, None, iterations = 2)
         #mask = cv2.dilate(mask, None, iterations = 2)
@@ -322,7 +322,7 @@ def find_green_stuff():
 
 def pick_up_ball():
     while True:
-      input_top = GPIO.input(pinTOP)
+      input_top = GPIO.input(pinTOP)  #turn until the top of forklift switch is hit
       if input_top == False:
           lift_up()
           print('no button, lifting')
@@ -331,7 +331,7 @@ def pick_up_ball():
           print('button hit')
           return 1
 
-def set_down_ball():                  #MIGHT NOT HIT BUTTON IF NOT PERFECTLY ALIGNED WITH CAN
+def set_down_ball():                  #MIGHT NOT HIT BUTTON IF NOT PERFECTLY ALIGNED WITH CAN --- need to fix this bug
     print('going to set down')
     while True:
       input_bot = GPIO.input(pinBOT)
@@ -375,7 +375,7 @@ while mission_accomplished == 0:
             find_green_stuff()
             set_down_ball()
     if input_top ==True:
-        print('going to find the green can')
+        print('going to find the green can')    #need to add code to look for green can if not in frame
         find_green_stuff()
         rawCapture.truncate(0)
         print('going to set down')
